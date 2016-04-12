@@ -311,7 +311,7 @@
 // </e>
 
 // <e> UART0 (Universal asynchronous receiver transmitter)
-#define RTE_UART0                       1
+#define RTE_UART0                       0
 
 //   <o> UART0_TX Pin <0=>P0_2
 //   <i> UART0 Serial Output pin
@@ -349,7 +349,7 @@
 
 //     </e>
 // <e> UART1 (Universal asynchronous receiver transmitter)
-#define RTE_UART1                       1
+#define RTE_UART1                       0
 
 //   <o> U1_TX Pin <0=>P0_15 <1=>P2_0
 //   <i> UART1 Serial Output pin
@@ -718,7 +718,7 @@
 //   <h> Pin Configuration
 //     <o> SSP0_SSEL <0=>Not used <1=>P0_16 <2=>P1_21
 //     <i> Slave Select for SSP0
-#define   RTE_SSP0_SSEL_PIN_SEL         2
+#define   RTE_SSP0_SSEL_PIN_SEL         1
 #if      (RTE_SSP0_SSEL_PIN_SEL == 0)
 #define   RTE_SSP0_SSEL_PIN_EN          0
 #elif    (RTE_SSP0_SSEL_PIN_SEL == 1)
@@ -738,7 +738,7 @@
 
 //     <o> SSP0_SCK <0=>P0_15 <1=>P1_20
 //     <i> Serial clock for SSP0
-#define   RTE_SSP0_SCK_PIN_SEL          1
+#define   RTE_SSP0_SCK_PIN_SEL          0
 #if      (RTE_SSP0_SCK_PIN_SEL == 0)
   #define RTE_SSP0_SCK_PORT             0
   #define RTE_SSP0_SCK_BIT              15
@@ -753,7 +753,7 @@
 
 //     <o> SSP0_MISO <0=>P0_17 <1=>P1_23
 //     <i> Master In Slave Out for SSP0
-#define   RTE_SSP0_MISO_PIN_SEL         1
+#define   RTE_SSP0_MISO_PIN_SEL         0
 #if      (RTE_SSP0_MISO_PIN_SEL == 0)
   #define RTE_SSP0_MISO_PORT            0
   #define RTE_SSP0_MISO_BIT             17
@@ -768,7 +768,7 @@
 
 //     <o> SSP0_MOSI <0=>P0_18 <1=>P1_24
 //     <i> Master Out Slave In for SSP0
-#define   RTE_SSP0_MOSI_PIN_SEL         1
+#define   RTE_SSP0_MOSI_PIN_SEL         0
 #if      (RTE_SSP0_MOSI_PIN_SEL == 0)
   #define RTE_SSP0_MOSI_PORT            0
   #define RTE_SSP0_MOSI_BIT             18
@@ -877,7 +877,7 @@
 //   <h> Pin Configuration
 //     <o> SPI_SSEL <0=>Not used <1=>P0_16
 //     <i> Slave Select for SPI
-#define   RTE_SPI_SSEL_PIN_SEL          1
+#define   RTE_SPI_SSEL_PIN_SEL          0
 #if      (RTE_SPI_SSEL_PIN_SEL == 0)
 #define   RTE_SPI_SSEL_PIN_EN           0
 #elif    (RTE_SPI_SSEL_PIN_SEL == 1)

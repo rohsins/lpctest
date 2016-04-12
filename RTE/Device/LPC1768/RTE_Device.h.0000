@@ -17,8 +17,8 @@
  *
  * 3. This notice may not be removed or altered from any source distribution.
  *
- * $Date:        18. December 2015
- * $Revision:    V2.4.0
+ * $Date:        2. June 2014
+ * $Revision:    V2.2.0
  *
  * Project:      RTE Device Configuration for NXP LPC17xx
  * -------------------------------------------------------------------------- */
@@ -103,8 +103,7 @@
 #else
   #error "Invalid RTE_USB_UP_LED Pin Configuration!"
 #endif
-
-//  </h> Pin Configuration
+//   </h> Pin Configuration
 // </e> USB Controller [Driver_USBD and Driver_USBH]
 
 
@@ -283,7 +282,6 @@
 
 // </e>
 
-
 // <e> I2C2 (Inter-integrated Circuit Interface 2) [Driver_I2C2]
 // <i> Configuration settings for Driver_I2C2 in component ::Drivers:I2C
 #define RTE_I2C2                        0
@@ -338,12 +336,12 @@
 //     <e> Tx
 //       <o1> Channel     <0=>0 <1=>1 <2=>2 <3=>3 <4=>4 <5=>5 <6=>6 <7=>7
 //     </e>
-#define   RTE_UART0_DMA_TX_EN           1
+#define   RTE_UART0_DMA_TX_EN           0
 #define   RTE_UART0_DMA_TX_CH           0
 //     <e> Rx
 //       <o1> Channel    <0=>0 <1=>1 <2=>2 <3=>3 <4=>4 <5=>5 <6=>6 <7=>7
 //     </e>
-#define   RTE_UART0_DMA_RX_EN           1
+#define   RTE_UART0_DMA_RX_EN           0
 #define   RTE_UART0_DMA_RX_CH           1
 //   </h> DMA
 
@@ -503,12 +501,12 @@
 //     <e> Tx
 //       <o1> Channel     <0=>0 <1=>1 <2=>2 <3=>3 <4=>4 <5=>5 <6=>6 <7=>7
 //     </e>
-#define   RTE_UART1_DMA_TX_EN           1
+#define   RTE_UART1_DMA_TX_EN           0
 #define   RTE_UART1_DMA_TX_CH           0
 //     <e> Rx
 //       <o1> Channel    <0=>0 <1=>1 <2=>2 <3=>3 <4=>4 <5=>5 <6=>6 <7=>7
 //     </e>
-#define   RTE_UART1_DMA_RX_EN           1
+#define   RTE_UART1_DMA_RX_EN           0
 #define   RTE_UART1_DMA_RX_CH           1
 //   </h> DMA
 
@@ -618,99 +616,6 @@
 
 // </e>
 
-// <e> CAN1 Controller [Driver_CAN1]
-// <i> Configuration settings for Driver_CAN1 in component ::Drivers:CAN
-#define   RTE_CAN_CAN1                  0
-
-//   <h> Pin Configuration
-//     <o> CAN1_RD <0=>Not used <1=>P0_0 <2=>P0_21
-//     <i> CAN1 receiver input.
-#define   RTE_CAN1_RD_ID                0
-#if      (RTE_CAN1_RD_ID == 0)
-  #define RTE_CAN1_RD_PIN_EN            0
-#elif    (RTE_CAN1_RD_ID == 1)
-  #define RTE_CAN1_RD_PORT              0
-  #define RTE_CAN1_RD_BIT               0
-  #define RTE_CAN1_RD_FUNC              1
-#elif    (RTE_CAN1_RD_ID == 2)
-  #define RTE_CAN1_RD_PORT              0
-  #define RTE_CAN1_RD_BIT               21
-  #define RTE_CAN1_RD_FUNC              3
-#else
-  #error "Invalid RTE_CAN1_RD Pin Configuration!"
-#endif
-#ifndef   RTE_CAN1_RD_PIN_EN
-  #define RTE_CAN1_RD_PIN_EN            1
-#endif
-//     <o> CAN1_TD <0=>Not used <1=>P0_1 <2=>P0_22
-//     <i> CAN1 transmitter output.
-#define   RTE_CAN1_TD_ID                0
-#if      (RTE_CAN1_TD_ID == 0)
-  #define RTE_CAN1_TD_PIN_EN            0
-#elif    (RTE_CAN1_TD_ID == 1)
-  #define RTE_CAN1_TD_PORT              0
-  #define RTE_CAN1_TD_BIT               1
-  #define RTE_CAN1_TD_FUNC              1
-#elif    (RTE_CAN1_TD_ID == 2)
-  #define RTE_CAN1_TD_PORT              0
-  #define RTE_CAN1_TD_BIT               22
-  #define RTE_CAN1_TD_FUNC              3
-#else
-  #error "Invalid RTE_CAN1_TD Pin Configuration!"
-#endif
-#ifndef   RTE_CAN1_TD_PIN_EN
-  #define RTE_CAN1_TD_PIN_EN            1
-#endif
-//   </h> Pin Configuration
-// </e> CAN1 Controller [Driver_CAN1]
-
-// <e> CAN2 Controller [Driver_CAN2]
-// <i> Configuration settings for Driver_CAN2 in component ::Drivers:CAN
-#define   RTE_CAN_CAN2                  0
-
-//   <h> Pin Configuration
-//     <o> CAN2_RD <0=>Not used <1=>P0_4 <2=>P2_7
-//     <i> CAN2 receiver input.
-#define   RTE_CAN2_RD_ID                0
-#if      (RTE_CAN2_RD_ID == 0)
-  #define RTE_CAN2_RD_PIN_EN            0
-#elif    (RTE_CAN2_RD_ID == 1)
-  #define RTE_CAN2_RD_PORT              0
-  #define RTE_CAN2_RD_BIT               4
-  #define RTE_CAN2_RD_FUNC              2
-#elif    (RTE_CAN2_RD_ID == 2)
-  #define RTE_CAN2_RD_PORT              2
-  #define RTE_CAN2_RD_BIT               7
-  #define RTE_CAN2_RD_FUNC              1
-#else
-  #error "Invalid RTE_CAN2_RD Pin Configuration!"
-#endif
-#ifndef   RTE_CAN2_RD_PIN_EN
-  #define RTE_CAN2_RD_PIN_EN            1
-#endif
-//     <o> CAN2_TD <0=>Not used <1=>P0_5 <2=>P2_8
-//     <i> CAN2 transmitter output.
-#define   RTE_CAN2_TD_ID                0
-#if      (RTE_CAN2_TD_ID == 0)
-  #define RTE_CAN2_TD_PIN_EN            0
-#elif    (RTE_CAN2_TD_ID == 1)
-  #define RTE_CAN2_TD_PORT              0
-  #define RTE_CAN2_TD_BIT               5
-  #define RTE_CAN2_TD_FUNC              2
-#elif    (RTE_CAN2_TD_ID == 2)
-  #define RTE_CAN2_TD_PORT              2
-  #define RTE_CAN2_TD_BIT               8
-  #define RTE_CAN2_TD_FUNC              1
-#else
-  #error "Invalid RTE_CAN2_TD Pin Configuration!"
-#endif
-#ifndef   RTE_CAN2_TD_PIN_EN
-  #define RTE_CAN2_TD_PIN_EN            1
-#endif
-//   </h> Pin Configuration
-// </e> CAN2 Controller [Driver_CAN2]
-
-
 // <e> SSP0 (Synchronous Serial Port 0) [Driver_SPI0]
 // <i> Configuration settings for Driver_SPI0 in component ::Drivers:SPI
 #define RTE_SSP0                        0
@@ -718,14 +623,14 @@
 //   <h> Pin Configuration
 //     <o> SSP0_SSEL <0=>Not used <1=>P0_16 <2=>P1_21
 //     <i> Slave Select for SSP0
-#define   RTE_SSP0_SSEL_PIN_SEL         2
+#define   RTE_SSP0_SSEL_PIN_SEL         1
 #if      (RTE_SSP0_SSEL_PIN_SEL == 0)
 #define   RTE_SSP0_SSEL_PIN_EN          0
 #elif    (RTE_SSP0_SSEL_PIN_SEL == 1)
   #define RTE_SSP0_SSEL_PORT            0
   #define RTE_SSP0_SSEL_BIT             16
   #define RTE_SSP0_SSEL_FUNC            2
-#elif    (RTE_SSP0_SSEL_PIN_SEL == 2)
+#elif    (RTE_SSP0_SSEL_PIN_SEL == 1)
   #define RTE_SSP0_SSEL_PORT            1
   #define RTE_SSP0_SSEL_BIT             21
   #define RTE_SSP0_SSEL_FUNC            3
@@ -738,7 +643,7 @@
 
 //     <o> SSP0_SCK <0=>P0_15 <1=>P1_20
 //     <i> Serial clock for SSP0
-#define   RTE_SSP0_SCK_PIN_SEL          1
+#define   RTE_SSP0_SCK_PIN_SEL          0
 #if      (RTE_SSP0_SCK_PIN_SEL == 0)
   #define RTE_SSP0_SCK_PORT             0
   #define RTE_SSP0_SCK_BIT              15
@@ -753,7 +658,7 @@
 
 //     <o> SSP0_MISO <0=>P0_17 <1=>P1_23
 //     <i> Master In Slave Out for SSP0
-#define   RTE_SSP0_MISO_PIN_SEL         1
+#define   RTE_SSP0_MISO_PIN_SEL         0
 #if      (RTE_SSP0_MISO_PIN_SEL == 0)
   #define RTE_SSP0_MISO_PORT            0
   #define RTE_SSP0_MISO_BIT             17
@@ -768,7 +673,7 @@
 
 //     <o> SSP0_MOSI <0=>P0_18 <1=>P1_24
 //     <i> Master Out Slave In for SSP0
-#define   RTE_SSP0_MOSI_PIN_SEL         1
+#define   RTE_SSP0_MOSI_PIN_SEL         0
 #if      (RTE_SSP0_MOSI_PIN_SEL == 0)
   #define RTE_SSP0_MOSI_PORT            0
   #define RTE_SSP0_MOSI_BIT             18
@@ -843,7 +748,7 @@
   #error "Invalid SSP1 SSP1_MISO Pin Configuration!"
 #endif
 
-//     <o> SSP1_MOSI <0=>P0_9
+//     <o> SSP1_MOSI <0=>P0_9 <1=>P1_24
 //     <i> Master Out Slave In for SSP0
 #define   RTE_SSP1_MOSI_PIN_SEL         0
 #if      (RTE_SSP1_MOSI_PIN_SEL == 0)
@@ -868,61 +773,6 @@
 #define   RTE_SSP1_DMA_RX_CH            3
 //   </h> DMA
 // </e>
-
-
-// <e> SPI (Serial Peripheral Interface) [Driver_SPI2]
-// <i> Configuration settings for Driver_SPI2 in component ::Drivers:SPI
-#define   RTE_SPI                       0
-
-//   <h> Pin Configuration
-//     <o> SPI_SSEL <0=>Not used <1=>P0_16
-//     <i> Slave Select for SPI
-#define   RTE_SPI_SSEL_PIN_SEL          1
-#if      (RTE_SPI_SSEL_PIN_SEL == 0)
-#define   RTE_SPI_SSEL_PIN_EN           0
-#elif    (RTE_SPI_SSEL_PIN_SEL == 1)
-  #define RTE_SPI_SSEL_PORT             0
-  #define RTE_SPI_SSEL_BIT              16
-  #define RTE_SPI_SSEL_FUNC             3
-#else
-  #error "Invalid SPI SPI_SSEL Pin Configuration!"
-#endif
-#ifndef   RTE_SPI_SSEL_PIN_EN
-#define   RTE_SPI_SSEL_PIN_EN           1
-#endif
-//     <o> SPI_SCK <0=>P0_15
-//     <i> Serial clock for SPI
-#define   RTE_SPI_SCK_PIN_SEL           0
-#if      (RTE_SPI_SCK_PIN_SEL == 0)
-  #define RTE_SPI_SCK_PORT              0
-  #define RTE_SPI_SCK_BIT               15
-  #define RTE_SPI_SCK_FUNC              3
-#else
-  #error "Invalid SPI SPI_SCK Pin Configuration!"
-#endif
-//     <o> SPI_MISO <0=>P0_17
-//     <i> Master In Slave Out for SPI
-#define   RTE_SPI_MISO_PIN_SEL          0
-#if      (RTE_SPI_MISO_PIN_SEL == 0)
-  #define RTE_SPI_MISO_PORT             0
-  #define RTE_SPI_MISO_BIT              17
-  #define RTE_SPI_MISO_FUNC             3
-#else
-  #error "Invalid SPI SPI_MISO Pin Configuration!"
-#endif
-//     <o> SPI_MOSI <0=>P0_18
-//     <i> Master Out Slave In for SPI
-#define   RTE_SPI_MOSI_PIN_SEL          0
-#if      (RTE_SPI_MOSI_PIN_SEL == 0)
-  #define RTE_SPI_MOSI_PORT             0
-  #define RTE_SPI_MOSI_BIT              18
-  #define RTE_SPI_MOSI_FUNC             3
-#else
-  #error "Invalid SPI SPI_MOSI Pin Configuration!"
-#endif
-//   </h> Pin Configuration
-// </e> SPI (Serial Peripheral Interface) [Driver_SPI2]
-
 
 // <e> I2S0 (Integrated Interchip Sound 0) [Driver_SAI0]
 // <i> Configuration settings for Driver_SAI0 in component ::Drivers:SAI
@@ -986,7 +836,7 @@
 #ifndef   RTE_I2S0_RX_SDA_PIN_EN
 #define   RTE_I2S0_RX_SDA_PIN_EN       1
 #endif
-//     <o> I2S0_RX_MCLK <0=>Not used <1=>P4_28
+//     <o> I2S0_RX_MCLK <0=>Not used <2=>P4_28
 //     <i> Receive master clock for I2S0
 #define   RTE_I2S0_RX_MCLK_PIN_SEL      0
 #if      (RTE_I2S0_RX_MCLK_PIN_SEL == 0)
@@ -1058,7 +908,7 @@
 #ifndef   RTE_I2S0_TX_SDA_PIN_EN
 #define   RTE_I2S0_TX_SDA_PIN_EN        1
 #endif
-//     <o> I2S0_TX_MCLK <0=>Not used <1=>P4_29
+//     <o> I2S0_TX_MCLK <0=>Not used <2=>P4_29
 //     <i> Transmit master clock for I2S0
 #define   RTE_I2S0_TX_MCLK_PIN_SEL      1
 #if      (RTE_I2S0_TX_MCLK_PIN_SEL == 0)

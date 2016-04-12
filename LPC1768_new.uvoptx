@@ -82,17 +82,17 @@
         <Book>
           <Number>0</Number>
           <Title>MCB1700 Schematics (MCB1700)</Title>
-          <Path>C:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.1.0\Documents\mcb1700-schematics.pdf</Path>
+          <Path>C:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.2.0\Documents/mcb1700-schematics.pdf</Path>
         </Book>
         <Book>
           <Number>1</Number>
           <Title>User Manual (MCB1700)</Title>
-          <Path>C:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.1.0\Documents\mcb1700.chm</Path>
+          <Path>C:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.2.0\Documents/mcb1700.chm</Path>
         </Book>
         <Book>
           <Number>2</Number>
           <Title>MCB1700 Quick Start Guide (MCB1700)</Title>
-          <Path>C:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.1.0\Documents\mcb1700_quickstart.pdf</Path>
+          <Path>C:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.2.0\Documents/mcb1700_quickstart.pdf</Path>
         </Book>
         <Book>
           <Number>3</Number>
@@ -149,7 +149,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>ARMRTXEVENTFLAGS</Key>
-          <Name>-L70 -Z18 -C0 -M0 -T1</Name>
+          <Name>-L70 -Z3 -C0 -M0 -T1</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -184,6 +184,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>iir</ItemText>
         </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>i</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -198,7 +203,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>1</periodic>
-        <aLwin>1</aLwin>
+        <aLwin>0</aLwin>
         <aCover>0</aCover>
         <aSer1>1</aSer1>
         <aSer2>0</aSer2>
@@ -212,8 +217,8 @@
         <AscS3>0</AscS3>
         <aSer3>0</aSer3>
         <eProf>0</eProf>
-        <aLa>1</aLa>
-        <aPa1>0</aPa1>
+        <aLa>0</aLa>
+        <aPa1>1</aPa1>
         <AscS4>0</AscS4>
         <aSer4>1</aSer4>
         <StkLoc>0</StkLoc>
@@ -223,12 +228,6 @@
       </DebugFlag>
       <LintExecutable></LintExecutable>
       <LintConfigFile></LintConfigFile>
-      <SystemViewers>
-        <Entry>
-          <Name>System Viewer\UART1</Name>
-          <WinId>35905</WinId>
-        </Entry>
-      </SystemViewers>
     </TargetOption>
   </Target>
 
@@ -282,19 +281,6 @@
       <bDave2>0</bDave2>
       <PathWithFileName>.\Main.c</PathWithFileName>
       <FilenameWithoutPath>Main.c</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>2</GroupNumber>
-      <FileNumber>4</FileNumber>
-      <FileType>1</FileType>
-      <tvExp>0</tvExp>
-      <Focus>0</Focus>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>.\UART_LPC17xx.c</PathWithFileName>
-      <FilenameWithoutPath>UART_LPC17xx.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

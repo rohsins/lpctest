@@ -6,8 +6,6 @@
 
 #define ARM_USART_DRV_VERSION ARM_DRIVER_VERSION_MAJOR_MINOR(2,3)
 
-extern void interruptDefinition(USART_RESOURCES*);
-
 #if ((defined(RTE_Drivers_USART0) || \
       defined(RTE_Drivers_USART1) || \
       defined(RTE_Drivers_USART2) || \
@@ -2705,7 +2703,6 @@ static ARM_USART_MODEM_STATUS USART1_GetModemStatus (void) {
 }
 void UART1_IRQHandler (void) {
 	USART_IRQHandler (&USART1_Resources);
-	interruptDefinition(&USART1_Resources);
 }
 #if (RTE_UART1_DMA_TX_EN == 1)
 void USART1_GPDMA_Tx_Event (uint32_t event) {
