@@ -1,8 +1,9 @@
 #include <LPC17xx.h>
 #include <UART_LPC17xx.h>
-//#include <SPI_LPC17xx.h>
+//#include <SSP_LPC17xx.h>
 #include <cmsis_os.h>
 #include "ITM_ARM.h"
+#include <string.h>
 
 #define IER_RBR 1U << 0
 #define IER_THRE 1U << 1
@@ -13,14 +14,17 @@
 
 extern ARM_DRIVER_USART Driver_USART0;
 extern ARM_DRIVER_USART Driver_USART1;
+//extern ARM_DRIVER_SPI Driver_SPI0;
 ARM_USART_STATUS Driver_USART1_STATUS;
 USART_TRANSFER_INFO Driver_USART1_INFO;
 
-char hello[100];
-
 char pData;
 char temp[100];
-char *readout = hello;
+char *readout = temp;
+char ne[25];
+int wh=0;
+char checkstring[25]={'+','I','P','D',',','0',',','1','3',':','\0','\0','L','I','G','H','T','O','N','E',':','7','1','0',','};
+unsigned int flag = 0;
 
 char ringBuffer[RINGBUFFLENGTH];
 unsigned int head, tail;
@@ -67,7 +71,7 @@ void USART_callback(uint32_t event)
 			itmPrintln("transfer complete");
 			break;
     case ARM_USART_EVENT_SEND_COMPLETE:
-			itmPrintln("send complete");
+//			itmPrintln("send complete");
 			break;
     case ARM_USART_EVENT_TX_COMPLETE:
 			itmPrintln("tx complete");
@@ -109,7 +113,7 @@ void uart0UnInitialize(void) {
 void uart1Initialize(void) {
         Driver_USART1.Initialize(USART_callback);
         Driver_USART1.PowerControl(ARM_POWER_FULL);
-        Driver_USART1.Control(ARM_USART_MODE_ASYNCHRONOUS| ARM_USART_DATA_BITS_8| ARM_USART_PARITY_NONE | ARM_USART_STOP_BITS_1 | ARM_USART_FLOW_CONTROL_NONE,57600);
+        Driver_USART1.Control(ARM_USART_MODE_ASYNCHRONOUS| ARM_USART_DATA_BITS_8| ARM_USART_PARITY_NONE | ARM_USART_STOP_BITS_1 | ARM_USART_FLOW_CONTROL_NONE,115200);
         Driver_USART1.Control(ARM_USART_CONTROL_TX,1);
         Driver_USART1.Control(ARM_USART_CONTROL_RX,1);  
 
@@ -122,15 +126,15 @@ void uart1UnInitialize(void) {
 }
 
 void SPI_callback(uint32_t event) {
-
+	itmPrintln("inside SPI Callback");
 }
 
-//void spiInitialize(void) {
-//	Driver_SPI2.Initialize(SPI_callback);
-//	Driver_SPI2.PowerControl(ARM_POWER_FULL);
-//	Driver_SPI2.Control(ARM_SPI_MODE_MASTER | ARM_SPI_MODE_MASTER_SIMPLEX | ARM_SPI_SET_BUS_SPEED | ARM_SPI_SS_MASTER_SW | ARM_SPI_CPOL0_CPHA1, 400000);
-//	Driver_SPI2.Control(ARM_SPI_SET_DEFAULT_TX_VALUE, 0x00);
-//	Driver_SPI2.Control(ARM_SPI_CONTROL_SS, 0); // Control slave select; arg = 0:inactive, 1:active
+//void spi0Initialize(void) {
+//	Driver_SPI0.Initialize(SPI_callback);
+//	Driver_SPI0.PowerControl(ARM_POWER_FULL);
+//	Driver_SPI0.Control(ARM_SPI_MODE_MASTER | ARM_SPI_MODE_MASTER_SIMPLEX | ARM_SPI_SET_BUS_SPEED | ARM_SPI_SS_MASTER_SW | ARM_SPI_CPOL0_CPHA1, 400000);
+//	Driver_SPI0.Control(ARM_SPI_SET_DEFAULT_TX_VALUE, 0x00);
+//	Driver_SPI0.Control(ARM_SPI_CONTROL_SS, 0); // Control slave select; arg = 0:inactive, 1:active
 //}
 
 void ledInitialize(void) {
@@ -138,45 +142,81 @@ void ledInitialize(void) {
 	LPC_PINCON->PINMODE1 = 0x00;
 	LPC_PINCON->PINMODE_OD1 = 0x00;
 	LPC_GPIO1->FIODIR2 = 0xFF;
+	
+	LPC_GPIO1->FIOSET2 = 0XFF;
 }
 
 void writeThread(void const *arg) {
-	while(1) {
-		Driver_USART1.Send("AT", 2);
-		osDelay(3000);
-	}
+	
+	Driver_USART0.Send("AT\r\n", 4);
+	osDelay(1000);
+	Driver_USART0.Send("AT+CIPMUX=1\r\n", 13);
+	osDelay(1000);
+	Driver_USART0.Send("AT+CIPSERVER=1,60300\r\n", 22);
+	osDelay(1000);
+	Driver_USART0.Send("AT+CIPSTO=1\r\n", 13);
+	osDelay(1000);
+	
+//	while(1) {
+//		Driver_USART0.Send("AT\r", 3);
+//		osDelay(3000);
+//	}
 }
 osThreadDef(writeThread, osPriorityNormal, 1, 0);                                                                                                                                         
 
 void initializeThread(void const *arg) {
 	ringBufferInit();
-	uart1Initialize();
-//	spiInitialize();
+	uart0Initialize();
 	ledInitialize();
-	itmPrintln("Initialized");
+//	spi0Initialize();
+//	itmPrintln("Initialized");
 }
 osThreadDef(initializeThread, osPriorityNormal, 1, 0);
 
 void heartBeatThread(void const *arg) {
 	while (1) {
-		LPC_GPIO1->FIOCLR2 = 0XFF;
+
 		osDelay(1000);
-		LPC_GPIO1->FIOSET2 = 0XFF;
-		osDelay(1000);
+		
+		if (strcmp(ne, checkstring) == 0 ) {
+			LPC_GPIO1->FIOCLR2 = 0XFF;
+		}
+		else {
+			LPC_GPIO1->FIOSET2 = 0XFF;
+		}
 	}
 }
 osThreadDef(heartBeatThread, osPriorityNormal, 1, 0);
 
 void readThread(void const *arg) {
+		flag = head;
 		while (1) {
-		Driver_USART1.Receive(&pData,1);
+		Driver_USART0.Receive(&pData,1);
 		if ( head != tail ) {
 			ringBufferRead(readout);
-			itmPrint(readout);
+//			itmPrint(readout);
+			ne[wh]=*readout;
+			wh++;
+			if ( *readout == '\n' ) wh = 0;
 		}
 	}
 }
 osThreadDef(readThread, osPriorityNormal, 1, 0);
+
+void refreshThread(void const *arg) {
+}
+osThreadDef(refreshThread, osPriorityNormal, 1, 0);
+
+//void spiDoThread(void const *arg) {
+//	while (1) {
+//		Driver_SPI0.Control(ARM_SPI_CONTROL_SS, 1);
+//		Driver_SPI0.Send("hello", 5);
+//		Driver_SPI0.Control(ARM_SPI_CONTROL_SS, 0);
+//		itmPrintln("SPI Data Sent");
+//		osDelay(3000);
+//	}
+//}
+//osThreadDef(spiDoThread, osPriorityNormal, 1, 0);
 
 int main(void) {
 				
@@ -188,6 +228,8 @@ int main(void) {
 	osThreadCreate(osThread(heartBeatThread), NULL);
 	osThreadCreate(osThread(readThread), NULL);
 	osThreadCreate(osThread(writeThread), NULL);
+//	osThreadCreate(osThread(refreshThread), NULL);
+//	osThreadCreate(osThread(spiDoThread), NULL);
 	
 //	LPC_SC->PCONP = 0x10;
 //	LPC_SC->PCLKSEL0 = 0x00;  //PCLK_peripheral = CCLK/4

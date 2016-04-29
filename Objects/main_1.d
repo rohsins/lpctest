@@ -15,3 +15,4 @@
 .\objects\main_1.o: C:\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.2.0\RTE_Driver\GPDMA_LPC17xx.h
 .\objects\main_1.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\RTOS\RTX\INC\cmsis_os.h
 .\objects\main_1.o: ITM_ARM.h
+.\objects\main_1.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

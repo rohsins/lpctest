@@ -22,23 +22,23 @@ Dialog DLL:      TARMP1.DLL V1.24.0.0
  
 <h2>Project:</h2>
 D:\Keil\LPC1768_new\LPC1768_new.uvprojx
-Project File Date:  04/01/2016
+Project File Date:  04/19/2016
 
 <h2>Output:</h2>
 Build target 'Target 1'
 compiling Main.c...
 linking...
-Program Size: Code=14312 RO-data=1024 RW-data=116 ZI-data=4220  
+Program Size: Code=14548 RO-data=1040 RW-data=152 ZI-data=4144  
 ".\Objects\LPC1768_new.axf" - 0 Error(s), 0 Warning(s).
 
 <h2>Software Packages used:</h2>
 
 Package Vendor: ARM
                 http://www.keil.com/pack/ARM.CMSIS.4.5.0.pack
-                ::CMSIS:RTOS:1.0 (API)
+                ARM::CMSIS:CORE:4.3.0
                 CMSIS (Cortex Microcontroller Software Interface Standard)
-   * Component: RTOS Version: 1.0
    * Component: CORE Version: 4.3.0
+   * Component: RTOS Version: 1.0
    * Component: USART Version: 2.01
    * Component: Keil RTX Version: 4.80.0
 
@@ -47,9 +47,9 @@ Package Vendor: Keil
                 Keil::Device:GPIO:1.1
                 NXP LPC1700 Series Device Support, Drivers and Examples for MCB1700 and LPC1788-32
    * Component: GPIO Version: 1.1
-   * Component: GPDMA Version: 1.2
-   * Component: USART Version: 2.4
    * Component: PIN Version: 1.0
+   * Component: USART Version: 2.4
+   * Component: GPDMA Version: 1.2
    * Component: Startup Version: 1.0.0
 
 <h2>Collection of Component include folders:</h2>
@@ -64,48 +64,48 @@ Package Vendor: Keil
 
 <h2>Collection of Component Files used:</h2>
 
-   * Component: ::CMSIS:RTOS:1.0 (API)
-
    * Component: ARM::CMSIS:CORE:4.3.0
+
+   * Component: ::CMSIS:RTOS:1.0 (API)
 
    * Component: ::CMSIS Driver:USART:2.01 (API)
       Include file:  CMSIS\Driver\Include\Driver_USART.h
 
    * Component: ARM::CMSIS:RTOS:Keil RTX:4.80.0
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Thread.c
-      Library file:  CMSIS\RTOS\RTX\LIB\ARM\RTX_CM3.lib
-      Include file:  CMSIS\RTOS\RTX\UserCodeTemplates\osObjects.h
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Mutex.c
       Include file:  CMSIS\RTOS\RTX\INC\cmsis_os.h
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\main.c
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\MemPool.c
       Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\MailQueue.c
-      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\MsgQueue.c
+      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\MemPool.c
+      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Thread.c
+      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\main.c
+      Library file:  CMSIS\RTOS\RTX\LIB\ARM\RTX_CM3.lib
       Source file:   CMSIS\RTOS\RTX\Templates\RTX_Conf_CM.c
+      Include file:  CMSIS\RTOS\RTX\UserCodeTemplates\osObjects.h
       Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Timer.c
       Source file:   CMSIS\RTOS\RTX\SRC\ARM\SVC_Table.s
+      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Mutex.c
       Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\Semaphore.c
+      Source file:   CMSIS\RTOS\RTX\UserCodeTemplates\MsgQueue.c
 
    * Component: Keil::Device:GPIO:1.1
-      Source file:   RTE_Driver\GPIO_LPC17xx.c
       Include file:  RTE_Driver\GPIO_LPC17xx.h
+      Source file:   RTE_Driver\GPIO_LPC17xx.c
 
-   * Component: Keil::Device:GPDMA:1.2
-      Source file:   RTE_Driver\GPDMA_LPC17xx.c
-      Include file:  RTE_Driver\GPDMA_LPC17xx.h
+   * Component: Keil::Device:PIN:1.0
+      Source file:   RTE_Driver\PIN_LPC17xx.c
+      Include file:  RTE_Driver\PIN_LPC17xx.h
 
    * Component: Keil::CMSIS Driver:USART:2.4
       Source file:   RTE_Driver\UART_LPC17xx.c
 
-   * Component: Keil::Device:PIN:1.0
-      Include file:  RTE_Driver\PIN_LPC17xx.h
-      Source file:   RTE_Driver\PIN_LPC17xx.c
+   * Component: Keil::Device:GPDMA:1.2
+      Include file:  RTE_Driver\GPDMA_LPC17xx.h
+      Source file:   RTE_Driver\GPDMA_LPC17xx.c
 
    * Component: Keil::Device:Startup:1.0.0
       Include file:  Device\Include\LPC17xx.h
-      Source file:   Device\Source\ARM\startup_LPC17xx.s
-      Source file:   Device\Source\system_LPC17xx.c
       Include file:  RTE_Driver\Config\RTE_Device.h
+      Source file:   Device\Source\system_LPC17xx.c
+      Source file:   Device\Source\ARM\startup_LPC17xx.s
 </pre>
 </body>
 </html>
