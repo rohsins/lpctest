@@ -1,6 +1,7 @@
 --cpu Cortex-M3
+".\objects\main.o"
 ".\objects\itm_arm.o"
-".\objects\main_1.o"
+".\objects\ringbuffer.o"
 "C:\Keil_v5\ARM\PACK\ARM\CMSIS\4.5.0\CMSIS\RTOS\RTX\LIB\ARM\RTX_CM3.lib"
 ".\objects\rtx_conf_cm.o"
 ".\objects\uart_lpc17xx.o"

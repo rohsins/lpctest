@@ -415,6 +415,11 @@
               <FileName>Main.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\Main.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>Main.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\Main.c</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -460,14 +465,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>ITM_ARM.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\ITM_ARM.c</FilePath>
-            </File>
-            <File>
-              <FileName>Main.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\Main.c</FilePath>
+              <FileName>ITM_ARM.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\ITM_ARM.cpp</FilePath>
             </File>
           </Files>
         </Group>

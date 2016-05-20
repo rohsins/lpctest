@@ -3,9 +3,9 @@
 
 #define ITM_Port8(n)   (*((volatile unsigned char *)(0xE0000000+4*n)))
 	
-void itmPrintln(volatile char *string);
-void itmPrint(volatile char *string);
-void itmPrintlnInt(volatile int integer);
-void itmPrintInt(volatile int integer);
+void itmPrintln(char *string);
+void itmPrint(char *string);
+void itmPrintlnInt(int integer);
+void itmPrintInt(int integer);
 	
 #endif
