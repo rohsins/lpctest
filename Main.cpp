@@ -3,13 +3,14 @@
 #include <cmsis_os.h>
 #include "ITM_ARM.h"
 #include <string.h>
+#include "RingBuffer.h"
 
 #define IER_RBR 1U << 0
 #define IER_THRE 1U << 1
 #define IER_RLS 1U << 2
-#define BUFSIZE 100
-#define RINGBUFFSIZE 100
-#define RINGBUFFLENGTH (RINGBUFFSIZE + 1)
+//#define BUFSIZE 100
+//#define RINGBUFFSIZE 100
+//#define RINGBUFFLENGTH (RINGBUFFSIZE + 1)
 
 extern ARM_DRIVER_USART Driver_USART0;
 extern ARM_DRIVER_USART Driver_USART1;
@@ -221,9 +222,16 @@ osThreadDef(readThread, osPriorityNormal, 1, 0);
 //osThreadDef(spiDoThread, osPriorityNormal, 1, 0);
 
 int main(void) {
+	
+	char oetest[] = "heyadfg";
 				
 	SystemCoreClockUpdate ();
 	SysTick_Config(SystemCoreClock/1000);
+	
+	RingBuffer ringBufferVariable;
+	RingBuffer ringBufferVariable2;
+	ringBufferVariable.ringBufferStringWrite(oetest);
+	ringBufferVariable2.ringBufferStringWrite("Hey");	
 	
 	osKernelInitialize();
 	osThreadCreate(osThread(initializeThread), NULL);
