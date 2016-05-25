@@ -21,4 +21,5 @@ class RingBuffer {
 		uint32_t ringBufferWrite(char in);
 		uint32_t ringBufferStringWrite(char in[]);
 		uint32_t ringBufferRead(char *out);
+		uint32_t ringBufferStringRead(char *out);
 };

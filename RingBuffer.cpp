@@ -30,3 +30,21 @@ uint32_t RingBuffer::ringBufferRead(char *out) {
 		tail = ((tail + 1) % RINGBUFFLENGTH);
 		return 0;
 }
+
+uint32_t RingBuffer::ringBufferStringRead(char *out) {
+	int tempCounter = 0;
+	if (head == tail) {
+		return 1;
+	}
+	while ( head != tail ) {
+		out[tempCounter]=ringBufferVariable[tail];
+		ringBufferVariable[tail] = 0;
+		tail = ((tail + 1) % RINGBUFFLENGTH);
+		tempCounter++;
+		if ( ringBufferVariable[tail] == '\n' ) {
+			tempCounter = 0;
+			tail++;
+		}
+	}
+	return 0;
+}

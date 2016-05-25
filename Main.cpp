@@ -223,7 +223,8 @@ osThreadDef(readThread, osPriorityNormal, 1, 0);
 
 int main(void) {
 	
-	char oetest[] = "heyadfg";
+	char oetest[] = "heyadfgijfdsl;kfjasd\nakl;sdjf;asdl";
+	char readTest[40];
 				
 	SystemCoreClockUpdate ();
 	SysTick_Config(SystemCoreClock/1000);
@@ -232,6 +233,7 @@ int main(void) {
 	RingBuffer ringBufferVariable2;
 	ringBufferVariable.ringBufferStringWrite(oetest);
 	ringBufferVariable2.ringBufferStringWrite("Hey");	
+	ringBufferVariable.ringBufferStringRead(readTest);
 	
 	osKernelInitialize();
 	osThreadCreate(osThread(initializeThread), NULL);
