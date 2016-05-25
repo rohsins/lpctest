@@ -1,3 +1,6 @@
+#ifndef _RingBuffer_H_
+#define _RingBuffer_H_
+
 #include <stdint.h>
 
 #define BUFSIZE 34
@@ -23,3 +26,5 @@ class RingBuffer {
 		uint32_t ringBufferRead(char *out);
 		uint32_t ringBufferStringRead(char *out);
 };
+
+#endif
