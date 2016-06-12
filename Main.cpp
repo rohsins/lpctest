@@ -8,12 +8,10 @@
 #define IER_RBR 1U << 0
 #define IER_THRE 1U << 1
 #define IER_RLS 1U << 2
-//#define BUFSIZE 100
-//#define RINGBUFFSIZE 100
-//#define RINGBUFFLENGTH (RINGBUFFSIZE + 1)
 
 extern ARM_DRIVER_USART Driver_USART0;
 extern ARM_DRIVER_USART Driver_USART1;
+
 //extern ARM_DRIVER_SPI Driver_SPI0;
 ARM_USART_STATUS Driver_USART1_STATUS;
 USART_TRANSFER_INFO Driver_USART1_INFO;
@@ -159,17 +157,12 @@ void writeThread(void const *arg) {
 	osDelay(1000);
 	Driver_USART0.Send("AT+CIPSTO=1\r\n", 13);
 	osDelay(1000);
-	
-//	while(1) {
-//		Driver_USART0.Send("AT\r", 3);
-//		osDelay(3000);
-//	}
 }
 osThreadDef(writeThread, osPriorityNormal, 1, 0);                                                                                                                                         
 
 void initializeThread(void const *arg) {
-	ringBufferInit();
-	uart0Initialize();
+//	ringBufferInit();
+//	uart0Initialize();
 	ledInitialize();
 //	spi0Initialize();
 //	itmPrintln("Initialized");
@@ -178,15 +171,16 @@ osThreadDef(initializeThread, osPriorityNormal, 1, 0);
 
 void heartBeatThread(void const *arg) {
 	while (1) {
-
+		LPC_GPIO1->FIOCLR2 = 0XFF;
+		osDelay(70);
+		LPC_GPIO1->FIOSET2 = 0XFF;
 		osDelay(1000);
-		
-		if (strcmp(ne, checkstring) == 0 ) {
-			LPC_GPIO1->FIOCLR2 = 0XFF;
-		}
-		else {
-			LPC_GPIO1->FIOSET2 = 0XFF;
-		}
+//		if (strcmp(ne, checkstring) == 0 ) {
+//			LPC_GPIO1->FIOCLR2 = 0XFF;
+//		}
+//		else {
+//			LPC_GPIO1->FIOSET2 = 0XFF;
+//		}
 	}
 }
 osThreadDef(heartBeatThread, osPriorityNormal, 1, 0);
@@ -222,24 +216,23 @@ osThreadDef(readThread, osPriorityNormal, 1, 0);
 //osThreadDef(spiDoThread, osPriorityNormal, 1, 0);
 
 int main(void) {
-	
-	char oetest[] = "heyadfgijfdsl;kfjasd\nakl;sdjf;asdl";
-	char readTest[40];
+//	char oetest[] = "heyadfgijfdsl;kfjasd\nakl;sdjf;asdl";
+//	char readTest[40];
 				
 	SystemCoreClockUpdate ();
 	SysTick_Config(SystemCoreClock/1000);
 	
-	RingBuffer ringBufferVariable;
-	RingBuffer ringBufferVariable2;
-	ringBufferVariable.ringBufferStringWrite(oetest);
-	ringBufferVariable2.ringBufferStringWrite("Hey");	
-	ringBufferVariable.ringBufferStringRead(readTest);
+//	RingBuffer ringBufferVariable;
+//	RingBuffer ringBufferVariable2;
+//	ringBufferVariable.ringBufferStringWrite(oetest);
+//	ringBufferVariable2.ringBufferStringWrite("Hey");	
+//	ringBufferVariable.ringBufferStringRead(readTest);
 	
 	osKernelInitialize();
 	osThreadCreate(osThread(initializeThread), NULL);
 	osThreadCreate(osThread(heartBeatThread), NULL);
-	osThreadCreate(osThread(readThread), NULL);
-	osThreadCreate(osThread(writeThread), NULL);
+//	osThreadCreate(osThread(readThread), NULL);
+//	osThreadCreate(osThread(writeThread), NULL);
 //	osThreadCreate(osThread(refreshThread), NULL);
 //	osThreadCreate(osThread(spiDoThread), NULL);
 	
@@ -259,6 +252,6 @@ int main(void) {
 //	LPC_UART1->THR = 'o';
 	
 //	uart0Initialize();
-			
+		
 	return 0;
 }
