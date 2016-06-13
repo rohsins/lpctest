@@ -3,7 +3,7 @@
 .\objects\net_config.o: RTE\Network\Net_Config_ETH_0.h
 .\objects\net_config.o: RTE\Network\Net_Config_UDP.h
 .\objects\net_config.o: RTE\Network\Net_Config_TCP.h
-.\objects\net_config.o: RTE\Network\Net_Config_DNS_Client.h
+.\objects\net_config.o: RTE\Network\Net_Config_BSD.h
 .\objects\net_config.o: C:\Keil_v5\ARM\PACK\Keil\MDK-Middleware\7.1.0\Network\Include\net_config.h
 .\objects\net_config.o: C:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.0-Beta4\CMSIS\RTOS\RTX\INC\cmsis_os.h
 .\objects\net_config.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h

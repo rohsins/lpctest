@@ -4,6 +4,10 @@
 #include "ITM_ARM.h"
 #include <string.h>
 #include "RingBuffer.h"
+#include <Driver_ETH.h>
+#include <Driver_ETH_MAC.h>
+#include <Driver_ETH_PHY.h>
+#include "rl_net.h"
 
 #define IER_RBR 1U << 0
 #define IER_THRE 1U << 1
@@ -12,9 +16,17 @@
 extern ARM_DRIVER_USART Driver_USART0;
 extern ARM_DRIVER_USART Driver_USART1;
 
+extern ARM_DRIVER_ETH_MAC Driver_ETH_MAC0;
+extern ARM_DRIVER_ETH_PHY Driver_ETH_PHY0;
+
 //extern ARM_DRIVER_SPI Driver_SPI0;
 ARM_USART_STATUS Driver_USART1_STATUS;
 USART_TRANSFER_INFO Driver_USART1_INFO;
+
+static ARM_ETH_MAC_CAPABILITIES capabilities;
+static ARM_DRIVER_ETH_MAC *mac;
+static ARM_DRIVER_ETH_PHY *phy;
+static ARM_ETH_MAC_ADDR macAddress;
 
 char pData;
 char temp[100];
@@ -135,12 +147,75 @@ void SPI_callback(uint32_t event) {
 //	Driver_SPI0.Control(ARM_SPI_CONTROL_SS, 0); // Control slave select; arg = 0:inactive, 1:active
 //}
 
+void ethernetEvent(uint32_t event) {
+//	itmPrintln("we are inside ethernetEvent");
+}
+
+void ethernetInitialize(void) {
+//	mac = &Driver_ETH_MAC0;
+//  phy = &Driver_ETH_PHY0;
+//	capabilities = mac->GetCapabilities();
+//	mac->PowerControl(ARM_POWER_FULL);
+//	mac->GetMacAddress(macAddress);
+//	mac->SetMacAddress(macAddress); 
+//	mac->SetAddressFilter(macAddress, 0);
+//	mac->Control(ARM_ETH_MAC_CONFIGURE, ARM_ETH_MAC_SPEED_100M | ARM_ETH_MAC_DUPLEX_FULL);
+//	mac->Initialize(ethernetEvent);
+	
+	mac = &Driver_ETH_MAC0;
+  phy = &Driver_ETH_PHY0;
+ 
+  capabilities = mac->GetCapabilities ();
+   
+  mac->Initialize (ethernetEvent);
+  mac->PowerControl (ARM_POWER_FULL);
+ 
+  if (capabilities.mac_address == 1)  {
+    mac->SetMacAddress(&macAddress);
+  }
+  else {
+    mac->GetMacAddress(&macAddress);
+  }
+ 
+  if (phy->Initialize (mac->PHY_Read, mac->PHY_Write) == ARM_DRIVER_OK) {
+    phy->PowerControl (ARM_POWER_FULL);
+    phy->SetInterface (ARM_ETH_INTERFACE_RMII);
+    phy->SetMode (ARM_ETH_PHY_AUTO_NEGOTIATE);
+  }
+}
+
+static ARM_ETH_LINK_STATE ethernet_link;  
+ 
+void ethernet_check_link_status (void) {
+  ARM_ETH_LINK_STATE link;
+ 
+  link = phy->GetLinkState ();
+  if (link == ethernet_link) {    
+    return;                              
+  }
+                                       
+  ethernet_link = link;   
+  if (link == ARM_ETH_LINK_UP) {     
+    ARM_ETH_LINK_INFO info = phy->GetLinkInfo ();
+    mac->Control(ARM_ETH_MAC_CONFIGURE,
+                 info.speed  << ARM_ETH_MAC_SPEED_Pos  |
+                 info.duplex << ARM_ETH_MAC_DUPLEX_Pos |
+                 ARM_ETH_MAC_ADDRESS_BROADCAST);
+    mac->Control(ARM_ETH_MAC_CONTROL_TX, 1);
+    mac->Control(ARM_ETH_MAC_CONTROL_RX, 1);
+  }
+  else {                     
+    mac->Control(ARM_ETH_MAC_FLUSH, ARM_ETH_MAC_FLUSH_TX | ARM_ETH_MAC_FLUSH_RX);
+    mac->Control(ARM_ETH_MAC_CONTROL_TX, 0);
+    mac->Control(ARM_ETH_MAC_CONTROL_RX, 0);
+  }
+}
+
 void ledInitialize(void) {
 	LPC_PINCON->PINSEL1 = 0x00;
 	LPC_PINCON->PINMODE1 = 0x00;
 	LPC_PINCON->PINMODE_OD1 = 0x00;
 	LPC_GPIO1->FIODIR2 = 0xFF;
-	
 	LPC_GPIO1->FIOSET2 = 0XFF;
 }
 
@@ -175,6 +250,7 @@ void heartBeatThread(void const *arg) {
 		osDelay(70);
 		LPC_GPIO1->FIOSET2 = 0XFF;
 		osDelay(1000);
+		ethernet_check_link_status();
 //		if (strcmp(ne, checkstring) == 0 ) {
 //			LPC_GPIO1->FIOCLR2 = 0XFF;
 //		}
@@ -229,6 +305,8 @@ int main(void) {
 //	ringBufferVariable.ringBufferStringRead(readTest);
 	
 	osKernelInitialize();
+	ethernetInitialize();
+	
 	osThreadCreate(osThread(initializeThread), NULL);
 	osThreadCreate(osThread(heartBeatThread), NULL);
 //	osThreadCreate(osThread(readThread), NULL);
