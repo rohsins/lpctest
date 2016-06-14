@@ -3,149 +3,27 @@
 #include <cmsis_os.h>
 #include "ITM_ARM.h"
 #include <string.h>
-#include "RingBuffer.h"
 #include <Driver_ETH.h>
 #include <Driver_ETH_MAC.h>
 #include <Driver_ETH_PHY.h>
 #include "rl_net.h"
 
-#define IER_RBR 1U << 0
-#define IER_THRE 1U << 1
-#define IER_RLS 1U << 2
-
-extern ARM_DRIVER_USART Driver_USART0;
-extern ARM_DRIVER_USART Driver_USART1;
-
 extern ARM_DRIVER_ETH_MAC Driver_ETH_MAC0;
 extern ARM_DRIVER_ETH_PHY Driver_ETH_PHY0;
-
-//extern ARM_DRIVER_SPI Driver_SPI0;
-ARM_USART_STATUS Driver_USART1_STATUS;
-USART_TRANSFER_INFO Driver_USART1_INFO;
 
 static ARM_ETH_MAC_CAPABILITIES capabilities;
 static ARM_DRIVER_ETH_MAC *mac;
 static ARM_DRIVER_ETH_PHY *phy;
 static ARM_ETH_MAC_ADDR macAddress;
 
-char pData;
-char temp[100];
-char *readout = temp;
-char ne[25];
-int wh=0;
-char checkstring[25]={'+','I','P','D',',','0',',','1','3',':','\0','\0','L','I','G','H','T','O','N','E',':','7','1','0',','};
-unsigned int flag = 0;
-
-char ringBuffer[RINGBUFFLENGTH];
-unsigned int head, tail;
-
-void ringBufferInit(void) {
-	head = tail = 0;
-}
-
-uint32_t ringBufferWrite(char in) {
-	if (head == ((tail - 1 + RINGBUFFLENGTH) % 	RINGBUFFLENGTH)) {
-		return 1;
-	}
-	
-	ringBuffer[head] = in;
-	head = (head + 1) % RINGBUFFLENGTH;
-	return 0;
-}
-
-uint32_t ringBufferRead(char *out) {
-	if (head == tail) {
-		return 1;
-	}
-	*out = ringBuffer[tail];
-//	ringBuffer[tail] = 0; // just for acknowledge;
-	tail = ((tail + 1) % RINGBUFFLENGTH);
-	return 0; 
-}
-
-void USART_callback(uint32_t event)
-{
-//		static int i;
-	
-    switch (event)
-    {
-    case ARM_USART_EVENT_RECEIVE_COMPLETE: 
-//				itmPrintln("receive complete");
-					ringBufferWrite(pData);
-//					ringBufferRead(readout);
-//					itmPrint("readout:"); itmPrintlnInt(*readout);
-//					i++;
-//				itmPrintln(temp);
-				break;
-    case ARM_USART_EVENT_TRANSFER_COMPLETE:
-//			itmPrintln("transfer complete");
-			break;
-    case ARM_USART_EVENT_SEND_COMPLETE:
-//			itmPrintln("send complete");
-			break;
-    case ARM_USART_EVENT_TX_COMPLETE:
-//			itmPrintln("tx complete");
-        /* Success: Wakeup Thread */
-//        osSignalSet(tid_myUART_Thread, 0x01);
-        break;
- 
-    case ARM_USART_EVENT_RX_TIMEOUT:
-//			itmPrintln("rx timeout");
-         __breakpoint(0);  /* Error: Call debugger or replace with custom error handling */
-        break;
- 
-    case ARM_USART_EVENT_RX_OVERFLOW:
-//			itmPrintln("rx overflow");
-			break;
-    case ARM_USART_EVENT_TX_UNDERFLOW:
-        __breakpoint(0);  /* Error: Call debugger or replace with custom error handling */
-		break;		
-	}
-}
-
-void uart0Initialize(void) {
-        Driver_USART0.Initialize(USART_callback);
-        Driver_USART0.PowerControl(ARM_POWER_FULL);
-        Driver_USART0.Control(ARM_USART_MODE_ASYNCHRONOUS| ARM_USART_DATA_BITS_8| ARM_USART_PARITY_NONE | ARM_USART_STOP_BITS_1 | ARM_USART_FLOW_CONTROL_NONE,115200);
-        Driver_USART0.Control(ARM_USART_CONTROL_TX,1);
-        Driver_USART0.Control(ARM_USART_CONTROL_RX,1);      
-
-				NVIC_EnableIRQ(UART0_IRQn);
-				LPC_UART0->IER = IER_RBR | IER_THRE |IER_RLS; //Enable Interrupt
-
-
-}
-
-void uart0UnInitialize(void) {
-	Driver_USART0.Uninitialize();
-}
-
-void uart1Initialize(void) {
-        Driver_USART1.Initialize(USART_callback);
-        Driver_USART1.PowerControl(ARM_POWER_FULL);
-        Driver_USART1.Control(ARM_USART_MODE_ASYNCHRONOUS| ARM_USART_DATA_BITS_8| ARM_USART_PARITY_NONE | ARM_USART_STOP_BITS_1 | ARM_USART_FLOW_CONTROL_NONE,115200);
-        Driver_USART1.Control(ARM_USART_CONTROL_TX,1);
-        Driver_USART1.Control(ARM_USART_CONTROL_RX,1);  
-
-				NVIC_EnableIRQ(UART1_IRQn);
-				LPC_UART1->IER |= IER_RBR | IER_THRE |IER_RLS; //Enable Interrupt
-}
-
-void uart1UnInitialize(void) {
-	Driver_USART1.Uninitialize();
-}
-
-void SPI_callback(uint32_t event) {
-//	itmPrintln("inside SPI Callback");
-}
-
-//void spi0Initialize(void) {
-//	Driver_SPI0.Initialize(SPI_callback);
-//	Driver_SPI0.PowerControl(ARM_POWER_FULL);
-//	Driver_SPI0.Control(ARM_SPI_MODE_MASTER | ARM_SPI_MODE_MASTER_SIMPLEX | ARM_SPI_SET_BUS_SPEED | ARM_SPI_SS_MASTER_SW | ARM_SPI_CPOL0_CPHA1, 400000);
-//	Driver_SPI0.Control(ARM_SPI_SET_DEFAULT_TX_VALUE, 0x00);
-//	Driver_SPI0.Control(ARM_SPI_CONTROL_SS, 0); // Control slave select; arg = 0:inactive, 1:active
-//}
+const char mac_addr[]  = { "00-01-02-32-3c-46" };
+const char ip_addr[]   = { "192.168.5.217"     };
+const char def_gw[]    = { "192.168.5.1"       };
+const char net_mask[]  = { "255.255.255.0"     };
+const char pri_dns[]   = { "8.8.8.8"      };
+const char sec_dns[]   = { "8.8.4.4"      };
+const char host_name[] = { "RTS HARDWARE"          };
+bool DHCP_enabled      = false;
 
 void ethernetEvent(uint32_t event) {
 //	itmPrintln("we are inside ethernetEvent");
@@ -211,36 +89,54 @@ void ethernet_check_link_status (void) {
   }
 }
 
+void ethernetConfig(void) {
+	uint8_t buf[8];
+ 
+  netInitialize ();
+ 
+  /* Change host name */
+  netSYS_SetHostName (host_name);
+ 
+  /* Change MAC address */
+  netMAC_aton (mac_addr, buf);
+  netIF_SetOption (NET_IF_CLASS_ETH | 0, netIF_OptionMAC_Address, buf, NET_ADDR_ETH_LEN);
+ 
+  if (DHCP_enabled == false) {
+    /* Static configuration mode */ 
+    netDHCP_Disable (0);
+ 
+    /* Change IP address */
+    netIP_aton (ip_addr, NET_ADDR_IP4, buf);
+    netIF_SetOption (NET_IF_CLASS_ETH | 0, netIF_OptionIP4_Address, buf, NET_ADDR_IP4_LEN);
+ 
+    /* Change Network mask */
+    netIP_aton (net_mask, NET_ADDR_IP4, buf);
+    netIF_SetOption (NET_IF_CLASS_ETH | 0, netIF_OptionIP4_SubnetMask, buf, NET_ADDR_IP4_LEN);
+ 
+    /* Change Default Gateway address */
+    netIP_aton (def_gw, NET_ADDR_IP4, buf);
+    netIF_SetOption (NET_IF_CLASS_ETH | 0, netIF_OptionIP4_DefaultGateway, buf, NET_ADDR_IP4_LEN);
+ 
+    /* Change Primary DNS Server address */
+    netIP_aton (pri_dns, NET_ADDR_IP4, buf);
+    netIF_SetOption (NET_IF_CLASS_ETH | 0, netIF_OptionIP4_PrimaryDNS, buf, NET_ADDR_IP4_LEN);
+ 
+    /* Change Secondary DNS Server address */
+    netIP_aton (sec_dns, NET_ADDR_IP4, buf);
+    netIF_SetOption (NET_IF_CLASS_ETH | 0, netIF_OptionIP4_SecondaryDNS, buf, NET_ADDR_IP4_LEN);
+  }
+}
+
 void ledInitialize(void) {
 	LPC_PINCON->PINSEL1 = 0x00;
 	LPC_PINCON->PINMODE1 = 0x00;
 	LPC_PINCON->PINMODE_OD1 = 0x00;
 	LPC_GPIO1->FIODIR2 = 0xFF;
 	LPC_GPIO1->FIOSET2 = 0XFF;
-}
-
-void writeThread(void const *arg) {
-	Driver_USART0.Send("AT+CWSAP=\"HWR&D\",\"onetest\",3,0\r\n",32);
-	osDelay(1000);
-	Driver_USART0.Send("AT+CWMODE=2\r\n",13);
-	osDelay(1000);
-	Driver_USART0.Send("AT\r\n", 4);
-	osDelay(1000);
-	Driver_USART0.Send("AT+CIPMUX=1\r\n", 13);
-	osDelay(1000);
-	Driver_USART0.Send("AT+CIPSERVER=1,60300\r\n", 22);
-	osDelay(1000);
-	Driver_USART0.Send("AT+CIPSTO=1\r\n", 13);
-	osDelay(1000);
-}
-osThreadDef(writeThread, osPriorityNormal, 1, 0);                                                                                                                                         
+}                                                                                                                                      
 
 void initializeThread(void const *arg) {
-//	ringBufferInit();
-//	uart0Initialize();
 	ledInitialize();
-//	spi0Initialize();
-//	itmPrintln("Initialized");
 }
 osThreadDef(initializeThread, osPriorityNormal, 1, 0);
 
@@ -251,85 +147,74 @@ void heartBeatThread(void const *arg) {
 		LPC_GPIO1->FIOSET2 = 0XFF;
 		osDelay(1000);
 		ethernet_check_link_status();
-//		if (strcmp(ne, checkstring) == 0 ) {
-//			LPC_GPIO1->FIOCLR2 = 0XFF;
-//		}
-//		else {
-//			LPC_GPIO1->FIOSET2 = 0XFF;
-//		}
 	}
 }
 osThreadDef(heartBeatThread, osPriorityNormal, 1, 0);
 
-void readThread(void const *arg) {
-		flag = head;
-		while (1) {
-		Driver_USART0.Receive(&pData,1);
-		if ( head != tail ) {
-			ringBufferRead(readout);
-			itmPrint(readout);
-			ne[wh]=*readout;
-			wh++;
-			if ( *readout == '\n' ) wh = 0;
-		}
+int32_t tcp_sock;
+
+uint32_t tcp_cb_func (int32_t socket, netTCP_Event event, const NET_ADDR *addr, const uint8_t *buf, uint32_t len) {
+	itmPrintln("inside handler");
+  switch (event) {
+    case netTCP_EventConnect:
+      if (addr->addr_type == NET_ADDR_IP4) {
+        if (addr->addr[0] == 192  &&
+            addr->addr[1] == 168  &&
+            addr->addr[2] == 5    &&
+            addr->addr[3] == 117) {
+          return (1);
+        }
+      }
+      return (0);
+ 
+    case netTCP_EventEstablished:
+      // Connection established
+      break;
+ 
+    case netTCP_EventClosed:
+      // Connection was properly closed
+      break;
+ 
+    case netTCP_EventAborted:
+      // Connection is for some reason aborted
+      break;
+ 
+    case netTCP_EventACK:
+      // Previously sent data acknowledged
+      break;
+ 
+    case netTCP_EventData:
+      // Data received
+      if ((buf[0] == 0x01) && (len == 2)) {
+        // Switch LEDs on and off
+        // LED_SetOut (buf[1]);
+      }
+      break;
+  }
+  return (0);
+}
+
+void networkThread(const void *arg) {
+	tcp_sock = netTCP_GetSocket (tcp_cb_func);
+	if (tcp_sock >= 0) {
+		netTCP_Listen (tcp_sock, 60300);
 	}
 }
-osThreadDef(readThread, osPriorityNormal, 1, 0);
-
-//void refreshThread(void const *arg) {
-//}
-//osThreadDef(refreshThread, osPriorityNormal, 1, 0);
-
-//void spiDoThread(void const *arg) {
-//	while (1) {
-//		Driver_SPI0.Control(ARM_SPI_CONTROL_SS, 1);
-//		Driver_SPI0.Send("hello", 5);
-//		Driver_SPI0.Control(ARM_SPI_CONTROL_SS, 0);
-//		itmPrintln("SPI Data Sent");
-//		osDelay(3000);
-//	}
-//}
-//osThreadDef(spiDoThread, osPriorityNormal, 1, 0);
 
 int main(void) {
-//	char oetest[] = "heyadfgijfdsl;kfjasd\nakl;sdjf;asdl";
-//	char readTest[40];
 				
 	SystemCoreClockUpdate ();
 	SysTick_Config(SystemCoreClock/1000);
 	
-//	RingBuffer ringBufferVariable;
-//	RingBuffer ringBufferVariable2;
-//	ringBufferVariable.ringBufferStringWrite(oetest);
-//	ringBufferVariable2.ringBufferStringWrite("Hey");	
-//	ringBufferVariable.ringBufferStringRead(readTest);
-	
 	osKernelInitialize();
-	ethernetInitialize();
 	
 	osThreadCreate(osThread(initializeThread), NULL);
 	osThreadCreate(osThread(heartBeatThread), NULL);
-//	osThreadCreate(osThread(readThread), NULL);
-//	osThreadCreate(osThread(writeThread), NULL);
-//	osThreadCreate(osThread(refreshThread), NULL);
-//	osThreadCreate(osThread(spiDoThread), NULL);
 	
-//	LPC_SC->PCONP = 0x10;
-//	LPC_SC->PCLKSEL0 = 0x00;  //PCLK_peripheral = CCLK/4
-//	LPC_UART1->LCR = 0x83;
-//	LPC_UART1->DLL = 0x5D;
-//	LPC_UART1->DLM = 0x00;
-//	LPC_UART1->FCR = 0x00;
-//	LPC_UART1->FDR = 0x34;
-//	LPC_UART1->LCR = 0x03;
-//	LPC_PINCON->PINSEL4 = 0x0A;
-//	LPC_PINCON->PINMODE4 = 0x00;
-//	
-//	LPC_UART1->TER = 0x80;
-//	LPC_UART1->THR = 'a';
-//	LPC_UART1->THR = 'o';
-	
-//	uart0Initialize();
+	ethernetInitialize();
+//	ethernetConfig();
+//		netInitialize ();
+		
 		
 	return 0;
 }
