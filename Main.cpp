@@ -154,7 +154,7 @@ osThreadDef(heartBeatThread, osPriorityNormal, 1, 0);
 int32_t tcp_sock;
 
 uint32_t tcp_cb_func (int32_t socket, netTCP_Event event, const NET_ADDR *addr, const uint8_t *buf, uint32_t len) {
-	itmPrintln("inside handler");
+//	itmPrintln("inside handler");
   switch (event) {
     case netTCP_EventConnect:
       if (addr->addr_type == NET_ADDR_IP4) {
@@ -214,7 +214,6 @@ int main(void) {
 	ethernetInitialize();
 //	ethernetConfig();
 //		netInitialize ();
-		
 		
 	return 0;
 }
