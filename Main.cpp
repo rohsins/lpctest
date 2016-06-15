@@ -162,7 +162,7 @@ uint32_t tcp_cb_func (int32_t socket, netTCP_Event event, const NET_ADDR *addr, 
             addr->addr[1] == 168  &&
             addr->addr[2] == 5    &&
             addr->addr[3] == 117) {
-							itmPrintln("received from phone");
+						itmPrintln("received from phone");
           return (1);
         }
       }
