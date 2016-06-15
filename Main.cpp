@@ -162,6 +162,7 @@ uint32_t tcp_cb_func (int32_t socket, netTCP_Event event, const NET_ADDR *addr, 
             addr->addr[1] == 168  &&
             addr->addr[2] == 5    &&
             addr->addr[3] == 117) {
+							itmPrintln("received from phone");
           return (1);
         }
       }
@@ -202,18 +203,18 @@ void networkThread(const void *arg) {
 }
 
 int main(void) {
-				
+	
 	SystemCoreClockUpdate ();
 	SysTick_Config(SystemCoreClock/1000);
 	
 	osKernelInitialize();
-	
+	osKernelStart();
+	netInitialize ();
 	osThreadCreate(osThread(initializeThread), NULL);
 	osThreadCreate(osThread(heartBeatThread), NULL);
-	
+//	
 	ethernetInitialize();
-//	ethernetConfig();
-//		netInitialize ();
+	ethernetConfig();
 		
 	return 0;
 }

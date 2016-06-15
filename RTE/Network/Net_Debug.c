@@ -19,11 +19,11 @@
 
 //   <o>Memory Management  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure Dynamic Memory Management debugging
-#define DBG_MEM                 1
+#define DBG_MEM                 2
 
 //   <o>ETH Interface  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure Ethernet Interface debugging
-#define DBG_ETH                 1
+#define DBG_ETH                 2
 
 //   <o>PPP Interface  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure Serial PPP Interface debugging
@@ -40,36 +40,36 @@
 
 // <e>IPv4 Core Debug
 // <i>Enable printing IPv4 debug messages
-#define DBG_CORE4_EN            0
+#define DBG_CORE4_EN            1
 
 //   <o>IP4 Core  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure IPv4 Core/localhost debugging
-#define DBG_IP4                 1
+#define DBG_IP4                 2
 
 //   <o>ICMP Control  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure Internet Control Message debugging
-#define DBG_ICMP                1
+#define DBG_ICMP                2
 
 //   <o>IGMP Management  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure debugging of Multicast Group Management
-#define DBG_IGMP                1
+#define DBG_IGMP                2
 
 //   <o>NBNS Client  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure NetBIOS Name Service Client debugging
-#define DBG_NBNS                1
+#define DBG_NBNS                2
 
 //   <o>DHCP Client  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure Dynamic Host Configuration Client debugging
-#define DBG_DHCP                1
+#define DBG_DHCP                2
 
 //   <o>ARP Address Resolution  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure Ethernet Address Resolution debugging
-#define DBG_ARP                 1
+#define DBG_ARP                 2
 // </e>
 
 // <e>IPv6 Core Debug
 // <i>Enable printing IPv6 debug messages
-#define DBG_CORE6_EN            0
+#define DBG_CORE6_EN            1
 
 //   <o>IP6 Core  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure IPv6 Core/localhost debugging
@@ -90,15 +90,15 @@
 
 // <e>Socket Debug
 // <i>Enable printing socket debug messages
-#define DBG_SOCKET_EN           0
+#define DBG_SOCKET_EN           1
 
 //   <o>UDP Socket  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure native UDP Socket debugging
-#define DBG_UDP_SOCKET          1
+#define DBG_UDP_SOCKET          2
 
 //   <o>TCP Socket  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure native TCP Socket debugging
-#define DBG_TCP_SOCKET          1
+#define DBG_TCP_SOCKET          2
 
 //   <o>BSD Socket  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure BSD Socket Interface debugging
@@ -107,7 +107,7 @@
 
 // <e>Service Debug
 // <i>Enable printing service debug messages
-#define DBG_SERVICE_EN          0
+#define DBG_SERVICE_EN          1
 
 //   <o>HTTP Server  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure Web Server debugging

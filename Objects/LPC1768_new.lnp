@@ -6,6 +6,7 @@
 ".\objects\rtx_conf_cm.o"
 ".\objects\emac_lpc17xx.o"
 ".\objects\phy_lan8720.o"
+".\objects\retarget_io.o"
 ".\objects\gpdma_lpc17xx.o"
 ".\objects\gpio_lpc17xx.o"
 ".\objects\pin_lpc17xx.o"
