@@ -25,6 +25,12 @@ const char sec_dns[]   = { "8.8.4.4" };
 const char host_name[] = { "RTS HARDWARE" };
 bool DHCP_enabled      = false;
 
+bool ethernetDataFlag = false;
+bool triacToggle = false;
+
+int32_t tcp_sock;
+char tempwhat[32];
+
 void ethernetEvent(uint32_t event) {
 //	itmPrintln("we are inside ethernetEvent");
 }
@@ -131,6 +137,13 @@ void ledInitialize(void) {
 	LPC_PINCON->PINMODE_OD1 = 0x00;
 	LPC_GPIO1->FIODIR2 = 0xFF;
 	LPC_GPIO1->FIOSET2 = 0XFF;
+	
+	/* for triac gpio control */
+	LPC_PINCON->PINSEL0 = 0x00;
+	LPC_PINCON->PINMODE1 = 0x00;
+	LPC_PINCON->PINMODE_OD0 = 0x00;
+	LPC_GPIO0->FIODIR1 = 0x04;
+	LPC_GPIO0->FIOSET1 = 0X04;
 }                                                                                                                                      
 
 void initializeThread(void const *arg) {
@@ -144,12 +157,31 @@ void heartBeatThread(void const *arg) {
 		osDelay(70);
 		LPC_GPIO1->FIOSET2 = 0XFF;
 		osDelay(1000);
+		
+		if (ethernetDataFlag == true) {
+			ethernetDataFlag = false;
+			char checkstring[32]={'\0','\x06','A','l','t','i','u','m','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0'};
+			if (strcmp(tempwhat, checkstring) == 0) {
+				if (triacToggle == false) {
+					LPC_GPIO0->FIOCLR1 = 0X04;
+					triacToggle = true;
+				} else { 
+					LPC_GPIO0->FIOSET1 = 0X04;
+				}
+				int s = 30;
+				while (s > 1) {
+					LPC_GPIO1->FIOCLR2 = 0XFF;
+					osDelay(100);
+					LPC_GPIO1->FIOSET2 = 0XFF;
+					osDelay(100);
+					s--;
+				}
+			}
+		}
+		
 	}
 }
 osThreadDef(heartBeatThread, osPriorityNormal, 1, 0);
-
-int32_t tcp_sock;
-char tempwhat[32];
 
 uint32_t tcp_cb_func (int32_t socket, netTCP_Event event, const NET_ADDR *addr, const uint8_t *buf, uint32_t len) {
   switch (event) {
@@ -159,7 +191,8 @@ uint32_t tcp_cb_func (int32_t socket, netTCP_Event event, const NET_ADDR *addr, 
             addr->addr[1] == 168  &&
             addr->addr[2] == 5    &&
             addr->addr[3] == 117) {
-						itmPrintln("received from mobile");
+							ethernetDataFlag = true;
+//						itmPrintln("received from mobile");
           return (1);
         }
       }
@@ -183,17 +216,11 @@ uint32_t tcp_cb_func (int32_t socket, netTCP_Event event, const NET_ADDR *addr, 
  
     case netTCP_EventData:
 			int i = 0;
-//		  while (tempwhat[i] == '\0') {
-//				tempwhat[i] = 0;
-//				i++;
-//			}
-//			i = 0;
 			memset(tempwhat, 0, sizeof(tempwhat));
 			while (i < len) {
 				tempwhat[i] = buf[i];
 				i++;
 			}
-			itmPrintln(tempwhat);
       // Data received
       if ((buf[0] == 0x01) && (len == 2)) {
         // Switch LEDs on and off

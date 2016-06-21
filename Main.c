@@ -126,7 +126,7 @@ void uart1UnInitialize(void) {
 }
 
 void SPI_callback(uint32_t event) {
-	itmPrintln("inside SPI Callback");
+//	itmPrintln("inside SPI Callback");
 }
 
 //void spi0Initialize(void) {

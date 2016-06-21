@@ -11,7 +11,7 @@
 
 // <q>Print Time Stamps
 // <i>Enable printing time stamps in debug messages
-#define DBG_TIME                1
+#define DBG_TIME                0
 
 // <e>System Debug
 // <i>Enable printing system debug messages
@@ -40,7 +40,7 @@
 
 // <e>IPv4 Core Debug
 // <i>Enable printing IPv4 debug messages
-#define DBG_CORE4_EN            1
+#define DBG_CORE4_EN            0
 
 //   <o>IP4 Core  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure IPv4 Core/localhost debugging
@@ -90,7 +90,7 @@
 
 // <e>Socket Debug
 // <i>Enable printing socket debug messages
-#define DBG_SOCKET_EN           1
+#define DBG_SOCKET_EN           0
 
 //   <o>UDP Socket  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure native UDP Socket debugging
@@ -107,7 +107,7 @@
 
 // <e>Service Debug
 // <i>Enable printing service debug messages
-#define DBG_SERVICE_EN          1
+#define DBG_SERVICE_EN          0
 
 //   <o>HTTP Server  <0=>Off <1=>Errors only <2=>Full debug
 //   <i>Configure Web Server debugging
