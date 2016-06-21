@@ -167,8 +167,9 @@ void heartBeatThread(void const *arg) {
 					triacToggle = true;
 				} else { 
 					LPC_GPIO0->FIOSET1 = 0X04;
+					triacToggle = false;
 				}
-				int s = 30;
+				int s = 10;
 				while (s > 1) {
 					LPC_GPIO1->FIOCLR2 = 0XFF;
 					osDelay(100);
