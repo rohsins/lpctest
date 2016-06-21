@@ -16,13 +16,13 @@ static ARM_DRIVER_ETH_MAC *mac;
 static ARM_DRIVER_ETH_PHY *phy;
 static ARM_ETH_MAC_ADDR macAddress;
 
-const char mac_addr[]  = { "00-01-02-32-3c-46" };
-const char ip_addr[]   = { "192.168.5.217"     };
-const char def_gw[]    = { "192.168.5.1"       };
-const char net_mask[]  = { "255.255.255.0"     };
-const char pri_dns[]   = { "8.8.8.8"      };
-const char sec_dns[]   = { "8.8.4.4"      };
-const char host_name[] = { "RTS HARDWARE"          };
+const char mac_addr[]  = { "1E-30-6C-A2-45-5F" };
+const char ip_addr[]   = { "192.168.5.217" };
+const char def_gw[]    = { "192.168.5.1" };
+const char net_mask[]  = { "255.255.255.0" };
+const char pri_dns[]   = { "8.8.8.8" };
+const char sec_dns[]   = { "8.8.4.4" };
+const char host_name[] = { "RTS HARDWARE" };
 bool DHCP_enabled      = false;
 
 void ethernetEvent(uint32_t event) {
@@ -90,9 +90,7 @@ void ethernet_check_link_status (void) {
 }
 
 void ethernetConfig(void) {
-	uint8_t buf[8];
- 
-  netInitialize ();
+	uint8_t buf[8]; 
  
   /* Change host name */
   netSYS_SetHostName (host_name);
@@ -146,15 +144,14 @@ void heartBeatThread(void const *arg) {
 		osDelay(70);
 		LPC_GPIO1->FIOSET2 = 0XFF;
 		osDelay(1000);
-		ethernet_check_link_status();
 	}
 }
 osThreadDef(heartBeatThread, osPriorityNormal, 1, 0);
 
 int32_t tcp_sock;
+char tempwhat[32];
 
 uint32_t tcp_cb_func (int32_t socket, netTCP_Event event, const NET_ADDR *addr, const uint8_t *buf, uint32_t len) {
-//	itmPrintln("inside handler");
   switch (event) {
     case netTCP_EventConnect:
       if (addr->addr_type == NET_ADDR_IP4) {
@@ -162,7 +159,7 @@ uint32_t tcp_cb_func (int32_t socket, netTCP_Event event, const NET_ADDR *addr, 
             addr->addr[1] == 168  &&
             addr->addr[2] == 5    &&
             addr->addr[3] == 117) {
-						itmPrintln("received from phone");
+						itmPrintln("received from mobile");
           return (1);
         }
       }
@@ -185,6 +182,18 @@ uint32_t tcp_cb_func (int32_t socket, netTCP_Event event, const NET_ADDR *addr, 
       break;
  
     case netTCP_EventData:
+			int i = 0;
+//		  while (tempwhat[i] == '\0') {
+//				tempwhat[i] = 0;
+//				i++;
+//			}
+//			i = 0;
+			memset(tempwhat, 0, sizeof(tempwhat));
+			while (i < len) {
+				tempwhat[i] = buf[i];
+				i++;
+			}
+			itmPrintln(tempwhat);
       // Data received
       if ((buf[0] == 0x01) && (len == 2)) {
         // Switch LEDs on and off
@@ -195,10 +204,11 @@ uint32_t tcp_cb_func (int32_t socket, netTCP_Event event, const NET_ADDR *addr, 
   return (0);
 }
 
-void networkThread(const void *arg) {
+void socketListen(void) {
 	tcp_sock = netTCP_GetSocket (tcp_cb_func);
 	if (tcp_sock >= 0) {
 		netTCP_Listen (tcp_sock, 60300);
+		netTCP_SetOption (tcp_sock, netTCP_OptionTimeout, 1);
 	}
 }
 
@@ -206,15 +216,14 @@ int main(void) {
 	
 	SystemCoreClockUpdate ();
 	SysTick_Config(SystemCoreClock/1000);
-	
+		
 	osKernelInitialize();
 	osKernelStart();
 	netInitialize ();
-	osThreadCreate(osThread(initializeThread), NULL);
-	osThreadCreate(osThread(heartBeatThread), NULL);
-//	
 	ethernetInitialize();
 	ethernetConfig();
-		
+	osThreadCreate(osThread(initializeThread), NULL);
+	osThreadCreate(osThread(heartBeatThread), NULL);
+	socketListen();
 	return 0;
 }
